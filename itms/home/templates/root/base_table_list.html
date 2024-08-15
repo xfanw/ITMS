@@ -1,0 +1,17 @@
+{% extends 'root/base.html' %}
+{% load static %}
+
+{% block body_content %}
+<div class='row'>
+    {% block header_nav_bar %}{% endblock %}
+</div>
+
+<div class='col-md-12 mt-4'>
+    {% block table_list %}{% endblock %}
+</div>
+
+    <!-- pagination -->
+<div class='row'>
+    {% include 'root/paginator.html' %} 
+</div>
+{% endblock %}

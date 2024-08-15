@@ -1,0 +1,60 @@
+<style>
+    #page_nav a {
+        font-weight: bold;
+}
+</style>
+<!-- Show paginator only if page > 1 -->
+{% if objs.paginator.num_pages > 1 %}
+<div class='col-md-3'>
+    Page {{ objs.number }} of {{ objs.paginator.num_pages }}
+</div>
+<div class='col-md-3 row'>
+    <span class='col-md-3'>Show</span> 
+    <span class='col-md-3'> <input class='form-control' id='page_obj_count' value={{page_obj_count}}> </span>
+    <span class='col-md-6 ps-2'>per page</span>
+</div>
+<div class='col-md-6 text-end pe-0'>
+    <span id='page_nav'>
+        {% if objs.has_previous %}
+            <a class='btn btn-sm btn-outline-info' page_num='1'>&lArr; First</a>
+            {% if objs.number|add:'-5' > 0 %}
+                <a class='btn btn-sm btn-outline-info' page_num="{{ objs.number|add:'-5' }}">&laquo; 5 Before</a>
+            {% endif %}
+            <a class='btn btn-sm btn-outline-info ' page_num='{{ objs.previous_page_number }}'>&lsaquo; Previous</a>
+        {% endif %}
+
+        {% for num in objs.paginator.page_range %}
+            {% if objs.number == num %}
+                <span class='btn btn-sm' style='color:#0dcaf0; font-weight: bold;' >{{ num }}</span>
+            {% elif num > objs.number|add:'-3' and num < objs.number|add:'3' %}
+                <a class='btn btn-sm btn-outline-info' page_num='{{ num }}'>{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if objs.has_next %}
+            <a class='btn btn-sm btn-outline-info' page_num='{{ objs.next_page_number }}'>Next &rsaquo; </a>
+            {% if objs.number|add:'5' <= objs.paginator.num_pages %}
+                <a class='btn btn-sm btn-outline-info' page_num="{{ objs.number|add:'5' }}">5 After &raquo;</a>
+            {% endif %}
+            <a class='btn btn-sm btn-outline-info' page_num='{{ objs.paginator.num_pages }}'>Last &rArr;</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
+
+<script>
+    let search = '{{ curr_search }}';
+    let page_obj_count = '{{ page_obj_count }}'
+    let start_date = '{{curr_start_date}}'
+    let end_date = '{{curr_end_date}}'
+
+    $('#page_nav a').click(function(){
+        window.open('?page_num='+$(this).attr('page_num')+'&page_obj_count='+page_obj_count+'&search='+search+'&start_date='+start_date+'&end_date='+end_date, '_self');
+    })
+    
+    $('#page_obj_count').change(function(){
+        window.open('?page_num=1'+'&page_obj_count='+$(this).val()+'&search='+search+'&start_date='+start_date+'&end_date='+end_date, '_self');
+    })
+
+</script>

@@ -1,0 +1,99 @@
+{% extends 'root/root.html' %}
+{% load static %}
+{% block title %}ITMS SignUP{% endblock %}
+
+{% block html_body %}
+
+<main class='p-5'>
+    <section class='wrapper'>
+        <h1 class='text-center lite'>IT Management System of FII<h1>
+        <h4 class='text-center text-success'>Create Account<h4>
+        <form method='POST' class='row'>
+            {% csrf_token %}
+            <div class='col-md-6'>
+                <div class='row mt-5'>
+                    <div class='col-md-2'></div>
+                    <div class='col-md-4'>User Name:</div>
+                    <div class='col-md-4 p-0 row'>
+                        {{form.username}}
+                        {% comment %} <input class='form-control' name='username' placeholder='username recommand:First.Last' autofocus required> {% endcomment %}
+                    </div>
+                </div>
+                <div class='row mt-3'>
+                    <div class='col-md-2'></div>
+                    <div class='col-md-4'>Password:</div>
+                    <div class='col-md-4 p-0 row'>
+                        {{form.password1}}
+                        {% comment %} <input type='password' class='form-control' name='password' placeholder='password1' required> {% endcomment %}
+                    </div>
+                </div>
+                <div class='row mt-3'>
+                    <div class='col-md-2'></div>
+                    <div class='col-md-4'>Confirm Password:</div>
+                    <div class='col-md-4 p-0 row'>
+                        {{form.password2}}
+                        {% comment %} <input type='password' class='form-control' name='password' placeholder='password2' required> {% endcomment %}
+                    </div>
+                </div>
+                <div class='row mt-3'>
+                    <div class='col-md-2'></div>
+                    <div class='col-md-4'>Email:</div>
+                    <div class='col-md-4 p-0 row'>
+                        {{form.email}}
+                        {% comment %} <input type='email' class='form-control' name='email' placeholder='email' required> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-6'>
+                <div class='row mt-5'>
+                    <div class='col-md-4'>First Name:</div>
+                    <div class='col-md-4 p-0 row'>
+                        {{form.first_name}}
+                        {% comment %} <input class='form-control' name='firstname' required> {% endcomment %}
+                    </div>
+                </div>
+                <div class='row mt-3'>
+                    <div class='col-md-4'>Last Name:</div>
+                    <div class='col-md-4 p-0 row'>
+                        {{form.last_name}}
+                        {% comment %} <input class='form-control' name='lastname' required> {% endcomment %}
+                    </div>
+                </div>
+                <div class='row mt-3'>
+                    <div class='col-md-4'>Department:</div>
+                    <div class='col-md-4 p-0 row'>
+                        {{form.department}}
+                        {% comment %} <input class='form-control' name='department' required value='IT'> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-12 row mt-5'>
+                <div class='col-md-5'></div>
+                <div class='col-md-2 p-0 row'>
+                    <button class='btn btn-success'>Register</button>
+                </div>
+            </div>
+        </form>
+        <h5 class='text-center mt-5'>If you already have an account, <a href='/login' class='text-danger'>click here to login</a><h5>
+
+    </section>
+</main>
+
+{% endblock %}
+{% block script_block %}
+<script>
+$(function(){
+    $('input').addClass('form-control')
+    $('#id_username').attr('placeholder', 'Recommand: First.Last')
+    {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            show_json_message('error', '{{ error|escape }}')
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+})
+
+</script>
+{% endblock %}
+

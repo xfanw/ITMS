@@ -1,0 +1,152 @@
+{% extends "root/base_table_list.html" %}
+{% load static %}
+{% block title %}ITMS Employee{% endblock %}
+
+
+{% block header_links %}
+<li><i class='fa fa-list'></i> <a href="{% url 'employee:employee_list' %}">Employee List</a></li>
+<li><i class='fa fa-circle'></i> <a href="#">Add Employee</a></li>
+{% endblock %}
+
+{% block body_content %}
+
+<main>
+    <section class='wrapper'>
+        <form method='POST' action='/employee/add_employee' id='add_employee' class='row'>
+            {% csrf_token %}
+
+            <div class='col-md-1'></div>
+            <div class='col-md-10'>
+                <section class='card'>
+                    <header class="card-header bg-primary fw-bold text-white">
+                        Basic Information
+                    </header>
+            
+                    <div class="card-body">
+                        <div class='row mt-2'>
+                            <div class='col-md-3'>
+                                <label><span class='text-danger'>*</span>Employee ID:</label>
+                                <input class='form-control mt-2' name='employee_id'  required>
+                            </div>
+                            <div class='col-md-3'>
+                                <label>Join Date:</label>
+                                <input type='date' class='form-control mt-2' name='join_date' value='{{curr_date}}'>
+                            </div>
+                            <div class='col-md-3'>
+                            </div>
+                            <div class='col-md-3'>
+                            </div>
+                        </div>
+
+                        <div class='row mt-2'>
+                            <div class='col-md-3'>
+                                <label><span class='text-danger'>*</span>First Name:</label>
+                                <input class='form-control mt-2' name='first_name'  required>
+                            </div>
+                            <div class='col-md-3'>
+                                <label>Preferred Name:</label>
+                                <input class='form-control mt-2' name='preferred_name' placeholder='Optional'>
+                            </div>
+                            <div class='col-md-3'>
+                                <label>Middle Name:</label>
+                                <input class='form-control mt-2' name='middle_name' placeholder='Optional'>
+                            </div>
+                            <div class='col-md-3'>
+                                <label><span class='text-danger'>*</span>Last Name:</label>
+                                <input class='form-control mt-2' name='last_name'  required>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class='card mt-3'>
+                    <header class="card-header bg-primary fw-bold text-white">
+                        Department
+                    </header>
+            
+                    <div class="card-body">
+                        <div class='row mt-2'>
+                            <div class='col-md-3'>
+                                <label><span class='text-danger'>*</span>Cost Center:</label>
+                                <select name="department" class='form-control mt-2'>
+                                    <option value="" disabled selected>-------- Please Select --------</option>
+                                    {% for cc in cc_set %}
+                                        <option value="{{ cc.cc_code }}">{{ cc.cc_code }} -- {{ cc.cc_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class='col-md-3'>
+                                <label>Supervisor:</label>
+                                <input class='form-control mt-2' name='supervisor' >
+                            </div>
+                            <div class='col-md-3'>
+                            </div>
+                            <div class='col-md-3'>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class='card mt-3'>
+                    <header class="card-header bg-primary fw-bold text-white">
+                        Accounts Need To Be Created
+                    </header>
+            
+                    <div class="card-body">
+                        <div class='row'>
+                            
+                            {% for account_type in account_type_list %}
+                            <div class='col-md-3 mt-2'>
+                                <input type='checkbox' class='lg_checkbox ms-2' id='{{account_type}}' name='account_type' value='{{account_type}}'>
+                                <label for='{{account_type}}'>&nbsp;{{account_type}}</label>
+
+                            </div>
+                            {% endfor %}
+                                
+                            {% comment %} <div class='col-md-3'>
+                                <label><span class='text-danger'>*</span>MS Account:</label>
+                                <input class='form-control mt-2' name='ms_account'  required>
+
+                            </div>
+                            <div class='col-md-3'>
+                                <label><span class='text-danger'>*</span>ADP Account:</label>
+                                <input class='form-control mt-2' name='adp_account'  required>
+                            </div>
+                            <div class='col-md-3'>
+                                <label>Redmine Account:</label>
+                                <input class='form-control mt-2' name='redmine_account' >
+                            </div>
+                            <div class='col-md-3'>
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class='row pe-0'>
+                <div class='col-md-10'></div>                
+                <div class='col-md-1 mt-5 p-0 btn-row'>
+                    <button class='btn btn-primary'>Save</button>
+                </div>
+                <div class='col-md-1'></div>
+            </div>
+        </form>
+    </section>
+</main>
+
+{% endblock %}
+
+
+
+{% block script_block %}
+
+<script>
+    function setTodayDate() {
+        var today = new Date();
+        var formattedDate = today.toISOString().split('T')[0];
+        
+        $('#join_date').val(formattedDate);
+    }
+
+    $(document).ready(setTodayDate);
+</script>
+
+{% endblock %}

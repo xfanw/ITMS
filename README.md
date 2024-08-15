@@ -1,2 +1,3 @@
 # ITMS
-Asset Management System with Django
+
+IT management system for Employees and Assets

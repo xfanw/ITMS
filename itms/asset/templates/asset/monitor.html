@@ -1,0 +1,100 @@
+{% extends "root/base_table_list.html" %}
+{% load static %}
+{% block title %}ITMS Monitor{% endblock %}
+
+
+{% block header_links %}
+<li><i class='fa fa-list'></i> <a href="{% url 'employee:employee_list' %}">Employee List</a></li>
+<li><i class='far fa-circle'></i> <a href="{% url 'asset:asset_assign' %}">Assign Asset</a></li>
+<li><i class='far fa-circle'></i> <a href="{% url 'asset:laptop' %}">Laptop</a></li>
+<li><i class='fa fa-circle'></i> <a href="{% url 'asset:monitor' %}">Monitor</a></li>
+<li><a href='/media/SOP/Monitor_Excel_Template.xlsx' download='Monitor File Setup.xlsx' >&lt;Download Monitor File Template&gt;</a></li>
+{% endblock %}
+
+{% block header_nav_bar %}
+<div class='row pe-0'>
+    <form method='GET' id='test_record_form' class='col-md-6'>
+        <div class='row'>
+            <div class='col-md-4'>
+                <input class='form-control' name='search' id='search' placeholder='Search Any Field' value='{{curr_search}}' autofocus='true'>
+            </div>
+            <div class='col-md-1 btn-row'>
+                <button class='btn btn-primary'>Search</button>
+            </div>
+        </div>
+    </form>
+    <form method="POST" class='col-md-6' enctype="multipart/form-data" id='upload_monitor_file' action="{% url 'asset:upload_monitor_file' %}">
+        <div class='row'>
+            <div class='col-md-6'></div>
+            <div class='col-md-4'>
+                <label for='monitor_file' class='btn btn-outline-primary full-width' style='text-align:left'>
+                    <span class='text-danger'>*</span> Upload Monitor File
+                </label>
+                <input hidden id='monitor_file' name='monitor_file' type='file' style='opacity: 0;' onchange="$('#upload_monitor_file').submit()">
+            </div>
+            <div class='col-md-2'>
+                <button type='button' class='btn btn-primary' onclick="add_monitor()">
+                    Add Monitor
+                </button> 
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block table_list %}
+<table class='table table-hover' >
+    <thead>
+        <tr class='table-header'>
+            <th width='10%'>Asset Type</th>
+            <th width='10%'>Asset Label</th>
+            <th width='8%'>Brand</th>
+            <th width='8%'>Model</th>
+            <th width='8%'>SN</th>
+            <th width='8%'>Screen Size</th>
+            <th width='10%'>Resolution</th>
+            <th width='15%'>Purchase Date</th>
+            <th width='10%'>Purchase Cost</th>
+            <th width='8%'>Status</th>
+            <th width='8%'>Action</th>
+        </tr>
+    </thead>
+    <tbody class='bg-table'>
+    {% for monitor_ref in objs %}
+        <tr>
+            <td>{{monitor_ref.asset_type}}</td>
+            <td>{{monitor_ref.asset_label}}</td>
+            <td>{{monitor_ref.brand}}</td>
+            <td>{{monitor_ref.model}}</td>
+            <td>{{monitor_ref.serial_number}}</td>
+            <td>{{monitor_ref.screen_size}}</td>
+            <td>{{monitor_ref.resolution}}</td>
+            <td>{{monitor_ref.purchase_date | date:'Y-m-d'}}</td>
+            <td>${{monitor_ref.purchase_cost}}</td>
+            <td>{{monitor_ref.status}}</td>
+            <td>
+                <a class='cursor-pointer' title='Edit' 
+                    onclick="edit_monitor('{{monitor_ref.asset_label}}', '{{monitor_ref.brand}}', '{{monitor_ref.model}}', 
+                    '{{monitor_ref.serial_number}}', '{{monitor_ref.screen_size}}', '{{monitor_ref.resolution}}',
+                    '{{monitor_ref.purchase_date | date:'Y-m-d'}}', '{{monitor_ref.purchase_cost}}', '{{monitor_ref.status}}')"
+                ><i class='fa fa-lg fa-edit'></i></a>
+                {% if monitor_ref.status == 'IDLE' %}
+                <a class='cursor-pointer text-danger ms-3' title='Delete'
+                onclick="delete_monitor('{{monitor_ref.id}}', '{{monitor_ref.asset_label}}','{{monitor_ref.serial_number}}')"
+                ><i class='fa fa-lg fa-xmark'></i></a>
+                {% else %}
+                <a class='cursor-pointer text-dark ms-3' title='Delete' href='#'><i class='fa fa-lg fa-xmark'></i></a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+
+{% block script_block %}
+
+<script src="{% static 'asset/monitor.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+default:
+  image: python:3.6
+  
+variables: 
+    
+  dev_script: "
+      
+      cd /www/itms &&
+      sudo git fetch origin $BRANCH &&
+      sudo git reset --hard FETCH_HEAD &&
+      
+      python3.8 manage.py collectstatic --noinput &&
+      sudo cp -rf media/ /www/ &&   
+      
+      cd itms &&
+      echo '$ENV' > env.py &&
+      sudo sed -i '/MEDIA_ROOT =/d' settings.py &&
+      sudo sed -i \"$ a MEDIA_ROOT = '/www/media'\" settings.py &&
+      
+      
+      cd .. &&
+      pip3.8 install -r requirements.txt -q &&
+      python3.8 manage.py migrate &&
+      
+      sudo systemctl restart gunicorn &&
+      sudo systemctl restart nginx &&
+      echo 'Done' 
+
+    "
+    
+  prd_script: "
+      
+      cd /www/itms/itms &&
+      sudo git fetch origin $BRANCH &&
+      sudo git reset --hard FETCH_HEAD &&
+      
+      python3.8 manage.py collectstatic --noinput &&
+      sudo cp -rf media/ /www/ &&   
+      
+      cd itms &&
+      echo '$ENV' > env.py &&
+      sudo sed -i '/MEDIA_ROOT =/d' settings.py &&
+      sudo sed -i \"$ a MEDIA_ROOT = '/www/media'\" settings.py &&
+      
+      
+      cd .. &&
+      pip3.8 install -r requirements.txt -q &&
+      python3.8 manage.py migrate &&
+      
+      sudo systemctl restart gunicorn &&
+      sudo systemctl restart nginx &&
+      echo 'Done' 
+
+    "
+    
+    
+stages:
+  - deploy
+
+.script_before: &script_before
+  - apt-get update -qq
+  - apt-get install -qq git
+  - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+
+  
+deploy-dev:
+  stage: deploy
+  tags: [ITMS_DEV]
+  variables:
+    ENV: $TEST_ENV
+    BRANCH: development
+  before_script:
+    - *script_before
+  
+  script:
+    -  ssh cimsadmin@10.20.30.33 $dev_script
+  
+  only:
+  - development
+
+
+deploy-prod:
+  stage: deploy
+  tags: [ITMS_DEV]
+  variables:
+    ENV: $PROD_ENV
+    BRANCH: master
+  before_script:
+    - *script_before
+  
+  script:
+    - ssh cimsadmin@10.20.30.34 $prd_script
+  
+  only:
+  - master
