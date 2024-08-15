@@ -1,0 +1,86 @@
+{% extends "root/base_table_list.html" %}
+{% load static %}
+{% block title %}ITMS Employee{% endblock %}
+
+
+{% block header_links %}
+<li><i class='fa fa-circle'></i> <a href="{% url 'employee:employee_list' %}">Employee List</a></li>
+<li><i class='far fa-circle'></i> <a href="{% url 'asset:asset_assign' %}">Assign Asset</a></li>
+<li><i class='far fa-circle'></i> <a href="{% url 'account:account_assign' %}">Assign Account</a></li>
+{% endblock %}
+
+{% block header_nav_bar %}
+<form method='GET' id='test_record_form' class='row pe-0'>
+    <div class='col-md-2'>
+        <input class='form-control' name='search' id='search' placeholder='Search Any Field' value='{{curr_search}}' autofocus='true'>
+    </div>
+    <div class='col-md-1 btn-row'>
+        <button class='btn btn-primary'>Search</button>
+    </div>
+    <div class='col-md-8'></div>
+    <div class='col-md-1 btn-row'>
+            <button type='button' class='btn btn-primary' onclick="location.href='{% url "employee:add_employee_form" %}'">
+                Add Employee
+            </button>
+
+    </div>
+</form>
+{% endblock %}
+
+{% block table_list %}
+<table class='table table-hover' >
+    <thead>
+        <tr class='table-header'>
+            <th width='10%'>Employee ID</th>
+            <th width='15%'>Name</th>
+            <th width='10%'>Join Date</th>
+            <th width='10%'>Leave Date</th>
+            <th width='10%'>CC Code</th>
+            <th width='15%'>Department</th>
+            <th width='10%'>Supervisor</th>
+            <th width='10%'>Active</th>
+            <th width='10%'>Action</th>
+        </tr>
+    </thead>
+    <tbody class='bg-table'>
+    {% for employee_ref in objs %}
+        <tr {% if not employee_ref.active %} class='bg-warning' {% endif %}>
+            <td><a href="{% url 'employee:employee_overview' employee_id=employee_ref.employee_id %}" class='cursor-pointer'>{{employee_ref.employee_id}}</a></td>
+            <td>{{employee_ref.name}}</td>
+            <td>{{employee_ref.join_date | date:'Y-m-d'}}</td>
+            <td>{{employee_ref.leave_date | date:'Y-m-d' | default:"-- --"}}</td>
+            <td>{{employee_ref.department.cc_code}}</td>
+            <td>{{employee_ref.department.cc_name}}</td>
+            <td>{{employee_ref.supervisor}}</td>
+            <td>{{employee_ref.active}}</td>
+            <td>
+                <a href="{% url 'employee:edit_employee_form' employee_id=employee_ref.employee_id %}" class='cursor-pointer' title='Edit'><i class='fa fa-lg fa-edit'></i></a>
+                {% if employee_ref.account_dict or employee_ref.employeeasset_set.exists %}
+                    {% if not employee_ref.active %}
+                        <a class='cursor-pointer text-success ms-3' title='Activate'
+                            onclick="activate_employee('{{employee_ref.employee_id}}','{{employee_ref.name}}')"
+                        ><i class='fa fa-lg fa-check'></i></a>
+                    {% else %}
+                        <a class='cursor-pointer text-danger ms-3' title='Deactivate'
+                            onclick="deactivate_employee('{{employee_ref.employee_id}}','{{employee_ref.name}}')"
+                        ><i class='fa fa-lg fa-ban'></i></a>
+                    {% endif %}
+                {% else %}
+                    <a class='cursor-pointer text-danger ms-3' title='Delete'
+                        onclick="delete_employee('{{employee_ref.employee_id}}','{{employee_ref.name}}')"
+                    ><i class='fa fa-lg fa-xmark'></i></a>
+                    
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+
+{% block script_block %}
+
+<script src="{% static 'employee/employee.js' %}"></script>
+
+{% endblock %}

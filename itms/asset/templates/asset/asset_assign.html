@@ -1,0 +1,58 @@
+{% extends "root/base_table_list.html" %}
+{% load static %}
+{% block title %}ITMS Asset{% endblock %}
+
+
+{% block header_links %}
+<li><i class='fa fa-list'></i> <a href="{% url 'employee:employee_list' %}">Employee List</a></li>
+<li><i class='fa fa-circle'></i> <a href="{% url 'asset:asset_assign' %}">Assign Asset</a></li>
+<li><i class='far fa-circle'></i> <a href="{% url 'account:account_assign' %}">Assign Account</a></li>
+
+{% endblock %}
+
+{% block header_nav_bar %}
+<form method='GET' class='row pe-0'>
+    <div class='col-md-2'>
+        <input class='form-control' name='search' id='search' placeholder='Search Any Field' value='{{curr_search}}' autofocus='true'>
+    </div>
+    <div class='col-md-1 btn-row'>
+        <button class='btn btn-primary'>Search</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block table_list %}
+<table class='table table-hover' >
+    <thead>
+        <tr class='table-header'>
+            <th width='15%'>Employee ID</th>
+            <th width='15%'>Name</th>
+            <th width='20%'>Department</th>
+            <th width='15%'>Supervisor</th>
+            <th width='10%'>Asset Action</th>
+        </tr>
+    </thead>
+    <tbody class='bg-table'>
+    {% for employee_ref in objs %}
+        <tr {% if not employee_ref.active %} class='bg-warning' {% endif %}>
+            <td><a href="{% url 'employee:employee_overview' employee_id=employee_ref.employee_id %}">{{employee_ref.employee_id}}</a></td>
+            <td>{{employee_ref.name}}</td>
+            <td>{{employee_ref.department.cc_code}} -- {{employee_ref.department.cc_name}}</td>
+            <td>{{employee_ref.supervisor}}</td>
+            <td>
+                <button class='btn btn-lg btn-primary' 
+                    onclick="assign_asset('{{employee_ref.employee_id}}', '{{employee_ref.name}}')"
+                >Assign</button>
+                <a href="{% url 'asset:employee_asset_overview' employee_id=employee_ref.employee_id %}" class='cursor-pointer ms-2' title='Edit'><i class='fa fa-lg fa-edit'></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block script_block %}
+
+<script src="{% static 'asset/asset_assign.js' %}"></script>
+
+{% endblock %}

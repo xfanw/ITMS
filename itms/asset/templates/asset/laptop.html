@@ -1,0 +1,102 @@
+{% extends "root/base_table_list.html" %}
+{% load static %}
+{% block title %}ITMS Laptop{% endblock %}
+
+
+{% block header_links %}
+<li><i class='fa fa-list'></i> <a href="{% url 'employee:employee_list' %}">Employee List</a></li>
+<li><i class='far fa-circle'></i> <a href="{% url 'asset:asset_assign' %}">Assign Asset</a></li>
+<li><i class='fa fa-circle'></i> <a href="{% url 'asset:laptop' %}">Laptop</a></li>
+<li><i class='far fa-circle'></i> <a href="{% url 'asset:monitor' %}">Monitor</a></li>
+<li><a href='/media/SOP/Laptop_Excel_Template.xlsx' download='Laptop File Setup.xlsx' >&lt;Download Laptop File Template&gt;</a></li>
+{% endblock %}
+
+{% block header_nav_bar %}
+<div class='row pe-0'>
+    <form method='GET' id='test_record_form' class='col-md-6'>
+        <div class='row'>
+            <div class='col-md-4'>
+                <input class='form-control' name='search' id='search' placeholder='Search Any Field' value='{{curr_search}}' autofocus='true'>
+            </div>
+            <div class='col-md-1 btn-row'>
+                <button class='btn btn-primary'>Search</button>
+            </div>
+        </div>
+    </form>
+    <form method="POST" class='col-md-6' enctype="multipart/form-data" id='upload_laptop_file' action="{% url 'asset:upload_laptop_file' %}">
+        <div class='row'>
+            <div class='col-md-6'></div>
+            <div class='col-md-4'>
+                <label for='laptop_file' class='btn btn-outline-primary full-width' style='text-align:left'>
+                    <span class='text-danger'>*</span> Upload Laptop File
+                </label>
+                <input hidden id='laptop_file' name='laptop_file' type='file' style='opacity: 0;' onchange="$('#upload_laptop_file').submit()">
+            </div>
+            <div class='col-md-2'>
+                <button type='button' class='btn btn-primary' onclick="add_laptop()">
+                    Add Laptop
+                </button> 
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block table_list %}
+<table class='table table-hover' >
+    <thead>
+        <tr class='table-header'>
+            <th width='10%'>Asset Type</th>
+            <th width='10%'>Asset Label</th>
+            <th width='8%'>Brand</th>
+            <th width='8%'>Model</th>
+            <th width='8%'>SN</th>
+            <th width='8%'>Processor</th>
+            <th width='8%'>Ram(GB)</th>
+            <th width='8%'>Storage(GB)</th>
+            <th width='15%'>Purchase Date</th>
+            <th width='10%'>Purchase Cost</th>
+            <th width='10%'>Status</th>
+            <th width='10%'>Action</th>
+        </tr>
+    </thead>
+    <tbody class='bg-table'>
+    {% for laptop_ref in objs %}
+        <tr>
+            <td>{{laptop_ref.asset_type}}</td>
+            <td>{{laptop_ref.asset_label}}</td>
+            <td>{{laptop_ref.brand}}</td>
+            <td>{{laptop_ref.model}}</td>
+            <td>{{laptop_ref.serial_number}}</td>
+            <td>{{laptop_ref.processor}}</td>
+            <td>{{laptop_ref.ram}}</td>
+            <td>{{laptop_ref.storage}}</td>
+            <td>{{laptop_ref.purchase_date | date:'Y-m-d'}}</td>
+            <td>${{laptop_ref.purchase_cost}}</td>
+            <td>{{laptop_ref.status}}</td>
+            <td>
+                <a class='cursor-pointer' title='Edit' 
+                    onclick="edit_laptop('{{laptop_ref.asset_label}}', '{{laptop_ref.brand}}', '{{laptop_ref.model}}', 
+                    '{{laptop_ref.serial_number}}', '{{laptop_ref.processor}}', '{{laptop_ref.ram}}', '{{laptop_ref.storage}}',
+                    '{{laptop_ref.purchase_date | date:'Y-m-d'}}', '{{laptop_ref.purchase_cost}}', '{{laptop_ref.status}}')"
+                ><i class='fa fa-lg fa-edit'></i></a>
+                {% if laptop_ref.status == 'IDLE' %}
+                <a class='cursor-pointer text-danger ms-3' title='Delete'
+                onclick="delete_laptop('{{laptop_ref.id}}', '{{laptop_ref.asset_label}}','{{laptop_ref.serial_number}}')"
+                ><i class='fa fa-lg fa-xmark'></i></a>
+                {% else %}
+                <a class='cursor-pointer text-dark ms-3' title='Delete' href='#'><i class='fa fa-lg fa-xmark'></i></a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+
+{% block script_block %}
+
+<script src="{% static 'asset/laptop.js' %}"></script>
+
+{% endblock %}

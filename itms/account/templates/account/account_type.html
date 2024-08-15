@@ -1,0 +1,68 @@
+{% extends "root/base_table_list.html" %}
+{% load static %}
+{% block title %}ITMS Account{% endblock %}
+
+
+{% block header_links %}
+<li><i class='fa fa-circle'></i> <a href="{% url 'account:account_type' %}">Account Type</a></li>
+{% endblock %}
+
+{% block header_nav_bar %}
+<form method='GET' class='row pe-0'>
+    <div class='col-md-2'>
+        <input class='form-control' name='search' id='search' placeholder='Search Any Field' value='{{curr_search}}' autofocus='true'>
+    </div>
+    <div class='col-md-1 btn-row'>
+        <button class='btn btn-primary'>Search</button>
+    </div>
+    <div class='col-md-8'></div>
+    <div class='col-md-1 btn-row'>
+        <button type='button' class='btn btn-primary' onclick="add_account_type()">
+            Add New Type
+        </button> 
+    </div>
+</form>
+{% endblock %}
+
+{% block table_list %}
+<table class='table table-hover' >
+    <thead>
+        <tr class='table-header'>
+            <th width='20%'>Account Type</th>
+            <th width='20%'>Person In Charge</th>
+            <th width='20%'>PIC Email</th>
+            <th width='15%'>Updater</th>
+            <th width='15%'>Update Date</th>
+            <th width='10%'>Action</th>
+        </tr>
+    </thead>
+    <tbody class='bg-table'>
+    {% for account_type in account_type_set %}
+        <tr>
+            <td><a href="{% url 'logs:cost_center_log' %}?search={{account_type.account_type}}">{{account_type.account_type}}</a></td>
+            <td>{{account_type.person_in_charge}}</td>
+            <td>{{account_type.pic_email}}</td>
+            <td>{{account_type.updater}}</td>
+            <td>{{account_type.update_date|date:'Y-m-d H:i'}}</td>
+            <td>
+                <a class='cursor-pointer' title='Edit' 
+                    onclick="edit_account_type('{{account_type.account_type}}', '{{account_type.person_in_charge}}', '{{account_type.pic_email}}')"
+                ><i class='fa fa-lg fa-edit'></i></a>
+                {% if account_type.account_set.exists %}
+                <a class='cursor-pointer text-dark ms-5' title='Delete' 
+                ><i class='fa fa-lg fa-xmark'></i></a>
+                {% else %}
+                <a class='cursor-pointer text-danger ms-5' title='Delete' 
+                href="{% url 'account:delete_account_type' account_type_id=account_type.id %}"
+                ><i class='fa fa-lg fa-xmark'></i></a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block script_block %}
+<script src="{% static 'account/account_type.js' %}"></script>
+{% endblock %}

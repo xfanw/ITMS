@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <link rel='icon' href="{% static 'svg/eagle.svg'%}">
+    <title>{% block title %}IT MS {% endblock title %}</title>
+    {% comment %} <Third Party packages> {% endcomment %}
+    <link href="{% static 'bootstrap-5.1.3/bootstrap.min.css' %}?v=1" rel='stylesheet'>
+    <link href="{% static 'fontawesome-6/all.css' %}?v=1" rel='stylesheet'>
+    <link href="{% static 'sweetalert2-11.10.0/sweetalert2.min.css' %}?v=1" rel='stylesheet'>
+    <script src="{% static 'jquery-3.5.1/all.min.js'%}"></script>
+
+    {% comment %} <ITMS shared CSS> {% endcomment %}
+    <link href="{% static 'css/base.css' %}?v=1.5" rel='stylesheet'>
+
+    {% block extra_header %}{% endblock %}
+</head>
+<body>
+
+{% block html_body %}
+{% endblock%}
+
+<div class='modal' id='loader-modal-L6' role='dialog'>
+    <div style='width:5%; margin: 0 auto;'>
+        <div class='loader'></div>
+    </div>
+    <h3 id='loader-modal-L6-text' class='text-center' style='margin-top:3em; display:none'><span class='loader-text'>Do not Close or Refresh current page.</span></h3>
+</div>
+
+<div id="bottomSection">
+    {% for message in messages %}
+        <div class="message-box-bottom">
+            <div class="modal-content-{{ message.tags }}">
+                <span onclick="closeBottomSection()" class="close"><i class='fa fa-xmark'></i></span>
+                <div class="text-center">
+                    <p>{{ message }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div id='json-message' style='display:none'>
+    <div class="message-box-bottom">
+        <div id='json_message_status'>
+            <span onclick="hide_json_message()" class="close"><i class='fa fa-xmark'></i></span>
+            <div class="text-center">
+                <p id='json_message_msg'></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block script_block %}{% endblock %}
+
+{% comment %} <Third Party packages> {% endcomment %}
+<script src="{% static 'bootstrap-5.1.3/bootstrap.min.js'%}?v=1"></script>
+<script src="{% static 'fontawesome-6/all.js'%}?v=1"></script>
+<script src="{% static 'sweetalert2-11.10.0/sweetalert2.all.min.js' %}?v=1"></script>
+
+{% comment %} <ITMS shared js> {% endcomment %}
+<script src="{% static 'js/base.js'%}?v=1"></script>
+</body>
+</html>

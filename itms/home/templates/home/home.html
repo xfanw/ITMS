@@ -1,0 +1,72 @@
+{% extends "root/base.html" %}
+{% load static %}
+{% block title %}ITMS Home{% endblock %}
+
+{% block body_content %}
+<div class='row'>
+    <div class='col-sm-3'>
+        <a href="{% url 'home' %}">
+            <dash class='panel-body' >
+                <h3 class='dash-text'>User</h3>
+            </dash>
+        </a>
+        <div class="sub-menu-ul">
+            <a href="{% url 'profile'%}">My Profile</a>
+            <a href="{% url 'change_password'%}">Change Password</a>
+            <a href="{% url 'admin_itms:admin_home' %}">Admin</a>
+        </div>
+    </div>
+    <div class='col-sm-3'>
+        <a href="{% url 'home' %}">
+            <dash class='panel-body' >
+                <h3 class='dash-text'>Department</h3>
+            </dash>
+        </a>
+        <div class="sub-menu-ul">
+            <a href="{% url 'department:cost_center'%}">Cost Center</a>
+            <a href="{% url 'department:business_unit' %}">Businuss Unit</a>
+            <a href="{% url 'home' %}">Businuss Group</a>
+            <a href="{% url 'home' %}">Legal Entity</a>
+        </div>
+    </div>
+    <div class='col-sm-3'>
+        <a href="{% url 'home'%}">
+            <dash class='panel-body' >
+                <h3 class='dash-text'>Employee</h3>
+            </dash>
+        </a>
+        <div class="sub-menu-ul">
+            <a href="{% url 'employee:employee_list'%}"><b>Employee List</b></a>
+            <a href="{% url 'account:account_type'%}">Accout Type </a>
+            <a href="{% url 'account:account_assign'%}"><b>Assign Account</b></a>
+        </div>
+    </div>
+    <div class='col-sm-3'>
+        <a href="{% url 'home'%}">
+            <dash class='panel-body' >
+                <h3 class='dash-text'>Asset</h3>
+            </dash>
+        </a>
+        <div class="sub-menu-ul">
+            <a href="{% url 'asset:laptop'%}">Laptop</a>
+            <a href="{% url 'asset:monitor'%}">Monitor</a>
+            <a href="{% url 'asset:asset_assign'%}"><b>Assign Asset</b></a>
+            <a href="{% url 'asset:asset_assign'%}">Asset History</a>
+        </div>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-3'>
+        <a href="{% url 'home' %}">
+            <dash class='panel-body' >
+                <h3 class='dash-text'>Developing</h3>
+            </dash>
+        </a>
+        <div class="sub-menu-ul">
+            <a href="{% url 'home' %}">Coming Soon</a>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

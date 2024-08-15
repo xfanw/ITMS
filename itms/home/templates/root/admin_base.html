@@ -1,0 +1,61 @@
+{% extends "root/base.html" %}
+{% load static %}
+{% block title %}ITMS Admin{%endblock%}
+{% block extra_header%}
+{% endblock%}
+
+{% block header_links %}
+<li><i class='fa fa-circle'></i> <a href="{% url 'admin_itms:admin_home' %}">ITMS Admin</a></li>
+{% block admin_header_links %}{% endblock%}
+{% endblock %}
+
+{% block body_content %}
+<div class='row'>
+<div class='col-md-2'>
+    <div id='part_1_header' data-bs-toggle="collapse" data-bs-target="#part_1_detail">
+        <dash class='panel-body admin-dash'>
+            <h5 class='dash-text'>User Auth</h5>
+        </dash>
+    </div>
+    <div id="part_1_detail" class="collapse">
+
+            <div class='ms-4'><a href="{% url 'admin_itms:admin_reset_user_password' %}">Reset Password</a></div>
+            <div class='ms-4'><a href="{% url 'admin_itms:admin_auth' %}">User Auth Setup</a></div>
+            <div class='ms-4'><a href="{% url 'admin_itms:admin_auth_group' %}">Auth Group Setup</a></div>
+            {% comment %} <li><a href="{% url 'L6.l6_admin:bind_email_with_function' %}">Email Notification</a></li>
+            <li><a href="{% url 'L6.l6_admin:l6_reset_password' %}">Password Reset</a></li>
+            <li><a href="{% url 'L6.l6_admin:l6_auth' %}">Authentications</a></li> {% endcomment %}
+    </div>
+
+    <div id='part_2_header' data-bs-toggle="collapse" data-bs-target="#part_2_detail">
+        <dash class='panel-body admin-dash'>
+            <h5 class='dash-text'>System Setting</h5>
+        </dash>
+    </div>
+    <div id="part_2_detail" class="collapse">
+            <div class='ms-4'><a href="{% url 'home' %}">Under Developing</a></div>
+            {% comment %} <li><a href="{% url 'L6.l6_admin:pangus_settings' %}">Pangus Settings</a></li>
+            <li><a href="{% url 'L6.l6_admin:cims_list_settings' %}"">CIMS List Setting</a></li> {% endcomment %}
+    </div>
+
+    {% comment %} <div id='pending_header' data-toggle="collapse" data-target="#pending_detail">
+        <dash class='panel-body admin-dash'>
+            <h5 class='dash-text'>Under developing</h5>
+        </dash>
+    </div>
+    <div id="pending_detail" class="collapse" aria-labelledby="pending_header">
+        <ul>
+            <li>File Version Control</li>
+        </ul>
+    </div> {% endcomment %}
+</div>
+<div class='col-md-10'>
+    {% block admin_content %}{% endblock%}
+    <div class='col-md-12 row'>
+        {% include 'root/paginator.html' %} 
+    </div>
+</div> 
+</div>
+
+
+{% endblock %}

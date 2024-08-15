@@ -1,0 +1,105 @@
+{% extends "root/root.html" %}
+{% load static %}
+{% block extra_header %}
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    }
+</style>
+{% endblock %}
+{% block html_body %}
+<table class="table">
+
+    <tr>
+        <th colspan="12" class="text-center fw-bold h3" style='border-bottom:none'>PERSONAL CUSTODY PROPERTY RECORD / HAND RECEIPT</th>
+    </tr>
+    {% comment %} <tr>
+        <td style='border-top:none; border-right:none'></td>
+        <td style='border:none'></td>
+        <td style='border:none'></td>
+
+        <td style='border:none'></td>
+        <td style='border:none'></td>
+        <td style='border:none'></td>
+        
+        <td style='border:none'></td>
+        <td style='border:none'></td>
+        <td style='border:none'></td>
+        
+        <td style='border:none'></td>
+        <td style='border:none'></td>
+        <td style='border-top:none; border-left:none'></td>
+        
+    </tr> {% endcomment %}
+    <tr>
+        <th colspan="4">PROPERTY ISSUE TO:</th>
+        <th colspan="4">Cost Code</th>
+        <th colspan="4">Email</th>
+    </tr>
+    <tr>
+        <td colspan="4">{{employee_ref.name}}</td>
+        <td colspan="4">{{employee_ref.department.cc_code}}</td>
+        <td colspan="4">{{employee_ref.email|default:''}}</td>
+    </tr>
+    <tr>
+        <td colspan="12"> &nbsp;&nbsp;&nbsp;&nbsp;I have received the item(s) listed below on the date indicated. 
+            I accept personal responsibility for the property and will surrender it upon demand, transfer, 
+            or separation from the company. I further understand that failure on my part 
+            to exercise responsibility for the care and protection of the item(s) listed below 
+            could result in pecuniary liability established in accordance with Company Employee Handbook. </td>
+    </tr>
+    <tr>
+        <th colspan="4">Serial Number</th>
+        <th colspan="4">Asset Tag</th>
+        <th colspan="4">Category & Model</th>
+    </tr>
+
+
+    {% for asset in asset_set %}
+    <tr>
+        <td colspan="4">{{asset.asset_serial_number}}</td>
+        <td colspan="4">{{asset.asset_label}}</td>
+        <td colspan="4">{{asset.asset_type}}: {{asset.asset_brand}} {{asset.asset_model}}</td>
+    </tr>
+    {% endfor %}
+
+    <tr>
+        <th colspan="6">Name of Person Receiving Property:</th>
+        <th colspan="6">Date</th>
+    </tr>
+    <tr>
+        <td colspan="6">{{employee_ref.name}}</td>
+        <td colspan="6">{{curr_time}}</td>
+    </tr>
+    <tr>
+        <th colspan="6" style='border-bottom:none'>Signature</th>
+        <td colspan="6">Office Location: &nbsp&nbsp MPB &nbsp&nbsp SMV</th>
+    </tr>
+    <tr>
+        <td colspan="6" style='border-top:none'>&nbsp;</td>
+        <td colspan="6">Keyboard & Mouse Combo? Y / N </td>
+    </tr>
+    <tr>
+        <th colspan="4">Issue Date:</th>
+        <th colspan="4">Name of Issuing Property Custodian</th>
+        <th colspan="4" style='border-bottom:none'>Signature</th>
+    </tr>
+    <tr>
+        <td colspan="4">{{curr_time}}</td>
+        <td colspan="4">{{request.user.first_name}} {{request.user.last_name}}</td>
+        <td colspan="4" style='border-top:none'>&nbsp;</td>
+    </tr>
+
+</table>
+<div><img src="{% static 'svg/Foxconn-Signature.jpg' %}" ></div>
+{% endblock %}
+
+{% block script_block %}
+<script>
+    $(function(){
+        print()
+    })
+</script>
+
+{% endblock %}

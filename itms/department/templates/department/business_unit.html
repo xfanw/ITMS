@@ -1,0 +1,65 @@
+{% extends "root/base_table_list.html" %}
+{% load static %}
+{% block title %}ITMS Businuss Unit{% endblock %}
+
+
+{% block header_links %}
+<li><i class='far fa-circle'></i> <a href="{% url 'department:cost_center' %}">Cost Center</a></li>
+<li><i class='fa fa-circle'></i> <a href="{% url 'department:business_unit' %}">Businuss Unit</a></li>
+{% endblock %}
+
+{% block header_nav_bar %}
+<form method='GET' id='test_record_form' class='row pe-0'>
+    <div class='col-md-2'>
+        <input class='form-control' name='search' id='search' placeholder='Search Any Field' value='{{curr_search}}' autofocus='true'>
+    </div>
+    <div class='col-md-1 btn-row'>
+        <button class='btn btn-primary'>Search</button>
+    </div>
+    <div class='col-md-8'></div>
+    <div class='col-md-1 btn-row'>
+        <button type='button' class='btn btn-primary' onclick="add_business_unit()">
+            Add BU
+        </button> 
+    </div>
+</form>
+{% endblock %}
+
+{% block table_list %}
+<table class='table table-hover' >
+    <thead>
+        <tr class='table-header'>
+            <th width='10%'>BU Name</th>
+            <th width='15%'>BU Manager</th>
+            <th width='15%'>BG name</th>
+            <th width='15%'>LE Name</th>
+            <th width='10%'>Action</th>
+        </tr>
+    </thead>
+    <tbody class='bg-table'>
+    {% for bu_ref in objs %}
+        <tr>
+            <td><a href="{% url 'logs:business_unit_log' %}?search={{bu_ref.bu_name}}">{{bu_ref.bu_name}}</a></td>
+            <td>{{bu_ref.bu_manager}}</td>
+            <td>{{bu_ref.bg_name}}</td>
+            <td>{{bu_ref.le_name}}</td>
+            <td>
+                <a class='cursor-pointer' title='Edit' 
+                    onclick="edit_business_unit('{{bu_ref.bu_name}}', '{{bu_ref.bu_manager}}', '{{bu_ref.bg_name}}')"
+                ><i class='fa fa-lg fa-edit'></i></a>
+                <a class='cursor-pointer text-danger ms-5' title='Delete' 
+                href="{% url 'department:delete_business_unit' bu_id=bu_ref.id %}"
+                ><i class='fa fa-lg fa-xmark'></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block script_block %}
+<script>
+    let bg_name_list = {{bg_name_list|safe}}
+</script>
+<script src="{% static 'department/business_unit.js' %}"></script>
+{% endblock %}

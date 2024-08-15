@@ -1,0 +1,205 @@
+{% extends "root/base_table_list.html" %}
+{% load static %}
+{% block title %}ITMS Employee{% endblock %}
+
+
+{% block header_links %}
+<li><i class='fa fa-list'></i> <a href="{% url 'employee:employee_list' %}">Employee List</a></li>
+<li><i class='fa fa-circle'></i> <a href="{% url 'employee:edit_employee_form' employee_id=employee_ref.employee_id %}">Edit Employee: {{employee_ref.name}}</a></li>
+{% endblock %}
+
+
+{% block body_content %}
+
+<main>
+    <section class='wrapper'>
+        <form method='POST' action='/employee/edit_employee' id='edit_employee' class='row'>
+            {% csrf_token %}
+
+            <div class='col-md-1'></div>
+            <div class='col-md-10'>
+                <section class='card'>
+                    <div id='employee_header' data-bs-toggle="collapse" data-bs-target="#employee_body">
+                        <header class="card-header bg-primary fw-bold text-white">
+                            Basic Information
+                        </header>
+                    </div>
+
+                    <div class="card-body">
+                        <div id='employee_body' class='collapse show'>
+                            <div class='row mt-2'>
+                                <div class='col-md-3'>
+                                    <label><span class='text-danger'>*</span>Employee ID:</label>
+                                    <input class='form-control mt-2' name='employee_id'  readonly value='{{employee_ref.employee_id}}'>
+                                </div>
+                                <div class='col-md-3'>
+                                    <label>Join Date:</label>
+                                    <input type='date' class='form-control mt-2' name='join_date' value='{{employee_ref.join_date | date:"Y-m-d"}}'>
+                                </div>
+                                <div class='col-md-3'>
+                                </div>
+                                <div class='col-md-3'>
+                                </div>
+                            </div>
+
+                            <div class='row mt-2'>
+                                <div class='col-md-3'>
+                                    <label><span class='text-danger'>*</span>First Name:</label>
+                                    <input class='form-control mt-2' name='first_name'  required value='{{employee_ref.first_name}}'>
+                                </div>
+                                <div class='col-md-3'>
+                                    <label>Preferred Name:</label>
+                                    <input class='form-control mt-2' name='preferred_name' value='{{employee_ref.preferred_name}}'>
+                                </div>
+                                <div class='col-md-3'>
+                                    <label>Middle Name:</label>
+                                    <input class='form-control mt-2' name='middle_name' value='{{employee_ref.middle_name}}'>
+                                </div>
+                                <div class='col-md-3'>
+                                    <label><span class='text-danger'>*</span>Last Name:</label>
+                                    <input class='form-control mt-2' name='last_name'  required value='{{employee_ref.last_name}}'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class='card mt-3'>
+                    <div id='department_header' data-bs-toggle="collapse" data-bs-target="#department_body">
+                        <header class="card-header bg-primary fw-bold text-white">
+                            Department
+                        </header>
+                    </div>
+                    <div class="card-body">
+                        <div id='department_body' class='collapse show'>
+                            <div class='row mt-2'>
+                                <div class='col-md-3'>
+                                    <label><span class='text-danger'>*</span>Cost Center:</label>
+                                    <select name="department" class='form-control mt-2'>
+                                        <option value="" disabled selected>-------- Please Select --------</option>
+                                        {% for cc in cc_set %}
+                                            <option value="{{ cc.cc_code }}" 
+                                            {% if cc.cc_code == employee_ref.department.cc_code %}
+                                                selected
+                                            {% endif %}
+                                                >{{ cc.cc_code }} -- {{ cc.cc_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class='col-md-3'>
+                                    <label>Supervisor:</label>
+                                    <input class='form-control mt-2' name='supervisor' value='{{employee_ref.supervisor}}'>
+                                </div>
+                                <div class='col-md-3'>
+                                </div>
+                                <div class='col-md-3'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+                {% if employee_account_set %}
+                    <section class='card mt-3'>
+                        <div id='account_header' data-bs-toggle="collapse" data-bs-target="#account_body">
+                            <header class="card-header bg-primary fw-bold text-white">
+                                Accounts
+                            </header>
+                        </div>
+                        <div class="card-body">
+                            <div id='account_body' class='collapse show'>
+                                <div class='row'>
+                                    {% for employee_account in employee_account_set %}
+                                    <div class='col-md-3 mt-2'>
+                                        <label for='{{account_type}}'>&nbsp;{{employee_account.account_type_id}}</label>
+                                        <input class='form-control' id='{{account_type}}' name='employee_account' value='{{employee_account.account|default:""}}' readonly placeholder='Pending assign (PIC: {{employee_account.account_type.person_in_charge}} )'>                               
+
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+
+                {% if employee_no_account_list %}
+                    <section class='card mt-3'>
+                        <div id='account_pending_header' data-bs-toggle="collapse" data-bs-target="#account_pending_body">
+                            <header class="card-header bg-primary fw-bold text-white">
+                                Accounts Need To Be Created
+                            </header>
+                        </div>
+
+                        <div class="card-body">
+                            <div id='account_pending_body' class='collapse show'>
+                                <div class='row'>
+                                {% for account_type in employee_no_account_list %}
+                                    <div class='col-md-3 mt-2'>
+                                        <input type='checkbox' class='lg_checkbox ms-2' id='{{account_type}}' name='account_type' value='{{account_type}}'>
+                                        <label for='{{account_type}}'>&nbsp;{{account_type}}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+
+                <section class='card mt-3'>
+                    <div id='asset_header' data-bs-toggle="collapse" data-bs-target="#asset_body">
+                        <header class="card-header bg-primary fw-bold text-white">
+                            Assets
+                        </header>
+                    </div>
+                    <div class="card-body">
+                        <div id='asset_body' class='collapse show'>
+                            <div class='row mt-2'>
+                                <div id='asset_body' class='collapse show'>
+                                    {% if asset_set %}
+                                    <table class='table'>
+                                        <thead>
+                                            <tr>
+                                                <th width='15%'>Category</th>
+                                                <th width='15%'>Label</th>
+                                                <th width='15%'>SN</th>
+                                                <th width='10%'>Brand</th>
+                                                <th width='15%'>Model</th>
+                                                <th width='15%'>Assign Date</th>
+                                                <th width='15%'>Assign Person</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>                                        
+                                            {% for asset in asset_set %}
+                                                <tr>
+                                                    <td>{{asset.asset_type}}</td>
+                                                    <td>{{asset.asset_label}}</td>
+                                                    <td>{{asset.asset_serial_number}}</td>
+                                                    <td>{{asset.asset_brand}}</td>
+                                                    <td>{{asset.asset_model}}</td>
+                                                    <td>{{asset.assign_date|date:'Y-m-d H:i'}}</td>
+                                                    <td>{{asset.assign_person}}</td>
+                                                </tr>
+                                                
+                                            {% endfor %}                                            
+                                        </tbody>
+                                    </table>
+                                    {% else %}
+                                        No asset is assigned to {{employee_ref.name}}
+                                    {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+            <div class='row pe-0'>
+                <div class='col-md-10'></div>                
+                <div class='col-md-1 mt-5 p-0 btn-row'>
+                    <button class='btn btn-primary'>Save</button>
+                </div>
+                <div class='col-md-1'></div>
+            </div>
+        </form>
+    </section>
+</main>
+
+{% endblock %}

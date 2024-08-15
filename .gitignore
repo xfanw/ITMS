@@ -1,0 +1,17 @@
+.DS_Store
+__pycache__/
+env/
+*venv*/
+.idea/
+.vscode/
+env*.json
+*.trc
+relevant*file/
+*/media/*
+!*/media/dummy_file
+!*/media/SOP/
+sfc-env/
+credential_files/
+*pyrfc*
+env*.py
+

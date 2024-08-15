@@ -1,0 +1,36 @@
+{% extends "root/root.html" %}
+{% load static %}
+{% block html_body %}
+
+<header class='header'>
+    <a href="{% url 'home' %}"><div class='h2 lite float-start' style='padding-top:0.1em'>IT Management System</div></a>
+
+    <div class="dropdown">
+        <div class="header-drop-down dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        {{user.username|title}}
+        </div>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class='fa fa-gear text-primary'></i> Profile</a></li>
+            {% comment %} <li><a class="dropdown-item" href="#">Another action</a></li> {% endcomment %}
+            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class='fa fa-arrow-right-from-bracket text-danger'></i> Logout</a></li>
+        </ul>
+    </div>
+</header>
+<main class="p-4">
+    <section class="wrapper">
+        <ol class="body-nav">
+            <li><i class="fa fa-house"></i> <a href="{% url 'home' %}">Dashboard</a></li>
+            {% block header_links %}{% endblock %}
+            &nbsp;&nbsp;
+        </ol>
+        {% block body_content %}{% endblock %}
+    </section>
+</main>
+<div class='modal' id='loader-modal-L6' role='dialog'>
+    <div style='width:5%; margin: 0 auto;'>
+        <div class='loader'></div>
+    </div>
+    <h3 id='loader-modal-L6-text' class='text-center' style='margin-top:3em; display:none'><span class='loader-text'>Do not Close or Refresh current page.</span></h3>
+</div>
+
+{% endblock %}

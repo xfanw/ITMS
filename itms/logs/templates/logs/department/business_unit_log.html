@@ -1,0 +1,46 @@
+{% extends "root/base_table_list.html" %}
+{% load static %}
+{% block title %}ITMS:Logs Businuss Unit {% endblock %}
+
+
+{% block header_links %}
+<li><i class='far fa-circle'></i> <a href="{% url 'department:business_unit' %}">Businuss Unit</a></li>
+<li><i class='fa fa-circle'></i> <a href="{% url 'logs:business_unit_log' %}">Businuss Unit Log</a></li>
+{% endblock %}
+
+{% block header_nav_bar %}
+<form method='GET' id='test_record_form' class='row'>
+    <div class='col-md-2'>
+        <input class='form-control' name='search' id='search' placeholder='Search Any Field' value='{{curr_search}}' autofocus='true'>
+    </div>
+    <div class='col-md-1 row'>
+        <button class='btn btn-primary'>Search</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block table_list %}
+<table class='table table-hover' >
+    <thead>
+        <tr class='table-header'>
+            <th width='10%'>BU</th>
+            <th width='20%'>User</th>
+            <th width='20%'>Date</th>
+            <th width='20%'>Action</th>
+            <th width='30%'>Memo</th>
+        </tr>
+    </thead>
+    <tbody class='bg-table'>
+    {% for bu_log in objs %}
+        <tr>
+            <td>{{bu_log.bu_name}}</td>
+            <td>{{bu_log.user}}</td>
+            <td>{{bu_log.date|date:'Y-m-d H:i'}}</td>
+            <td>{{bu_log.action}}</td>
+            <td>{{bu_log.memo}}</td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
